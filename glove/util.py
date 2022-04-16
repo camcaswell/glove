@@ -11,7 +11,17 @@ def generate_subject_id() -> str:
     Returns:
         str: 8-digit hex string
     """
-    current_ids = {template_name.partition("-")[0] for template_name in os.listdir(cfg.TEMPLATES_DIR)}
+    current_ids = get_subject_ids()
     while (candidate := uuid4().hex[-8:]) in current_ids:
         pass
     return candidate
+
+
+def get_subject_ids() -> set[str]:
+    """
+    Scans glove-internal/subjects/templates and parses our IDs from the filenames.
+
+    Returns:
+        set[str]: The IDs of the current subject files. 
+    """
+    return {template_name.partition("-")[0] for template_name in os.listdir(cfg.TEMPLATES_DIR)}
