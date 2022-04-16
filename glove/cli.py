@@ -24,8 +24,6 @@ def hold(file: str, name: str = None):
     Args:
         file (_type_): _description_
     """
-    print(file, type(file))
-    print(os.getcwd())
 
     file_path = Path(file).resolve()
 
