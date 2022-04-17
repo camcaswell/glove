@@ -20,10 +20,10 @@ CONTEXT_SETTINGS = {
 def cli():
     pass
 
-@cli.command(name="hold")
+@cli.command(name="grab")
 @click.argument("file", type=click.Path())
 @click.option("-n", "--name", type=str)
-def hold(file: str, name: str = None):
+def grab(file: str, name: str = None):
     """
     Start tracking a file.
 
@@ -52,8 +52,11 @@ def hold(file: str, name: str = None):
         yaml.dump(meta_data, meta_file, default_flow_style=False)
 
 
-@cli.command(name="clean")
-def clean():
+@cli.command(name="wipe")
+def wipe():
+    """
+    Dev only, clear out glove-internal/subjects/templates and glove-internal/subjects/meta
+    """
     for folder in (cfg.META_DIR, cfg.TEMPLATES_DIR):
         for file in os.listdir(folder):
             os.remove(folder / file)
