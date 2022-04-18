@@ -7,6 +7,8 @@ from typing import Optional
 from uuid import uuid4
 
 import click
+from click.core import Argument, Context
+
 import glove.config as cfg
 
 
@@ -39,6 +41,35 @@ def get_subject_identifiers() -> dict[str, Optional[str]]:
         id_, name = parse_template_filename(template_filename)
         subject_identifiers[id_] = name or None
     return subject_identifiers
+
+def resolve_subject_refs(ctx: Context, arg: Argument, subject_refs: tuple[str]) -> set[str]:
+    """
+    Search existing subjects to resolve references into ids.
+
+    Args:
+        ctx (Context): Click command context
+        arg (Argument): Click argument
+        subject_refs (tuple[str]): References to subjects
+
+    Returns:
+        set[str]: The ids of the referenced subjects
+    """
+    found = set()
+    bad = []
+    ids = get_subject_identifiers()
+    names = {name.lower(): id_ for id_,name in ids.items() if name is not None}
+    for subject_ref in subject_refs:
+        if subject_ref in ids:
+            found.add(subject_ref)
+        elif subject_ref in names:
+            found.add(names[subject_ref])
+        else:
+            bad.append(subject_ref)
+    if bad:
+        bad_refs = "\n".join(bad)
+        raise click.BadParameter(f"Did not recognize these references to subject files:\n{bad_refs}")
+    else:
+        return found
 
 def parse_template_filename(filename: str) -> tuple[Optional[str], Optional[str]]:
     """
