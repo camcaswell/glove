@@ -12,7 +12,7 @@ import glove.util as util
 
 CONTEXT_SETTINGS = {
     "help_option_names": ["--help", "-h"],
-    "token_normalize_func": lambda token: token.lower(),
+    "token_normalize_func": lambda token: token.lower().strip(),
 }
 
 
