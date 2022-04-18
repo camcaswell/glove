@@ -52,6 +52,18 @@ def grab(file: str, name: str = None):
         yaml.dump(meta_data, meta_file, default_flow_style=False)
 
 
+@cli.command(name="list")
+def list_subjects():
+    """
+    Show the subject files that glove is tracking.
+    """
+    for id_, name in util.get_subject_identifiers().items():
+        row = id_
+        if name is not None:
+            row += f"    {name}"
+        click.echo(row)
+
+
 @cli.command(name="wipe")
 def wipe():
     """
